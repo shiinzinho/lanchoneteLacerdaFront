@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Image, ImageBackground, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Image, ImageBackground, ScrollView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { launchCamera, launchImageLibrary } from "react-native-image-picker";
 import axios from "axios";
 
@@ -88,6 +88,7 @@ const CadastroCliente: React.FC = () => {
             <View style={styles.header}>
                 <Image source={require('../assets/images/lacerda.png')} style={styles.imageHeader}></Image>
             </View>
+            <ScrollView>
             <View style={styles.form}>
                 <TextInput
                     style={styles.input}
@@ -150,6 +151,7 @@ const CadastroCliente: React.FC = () => {
                     <Text style={styles.buttonText}>Cadastrar Cliente</Text>
                 </TouchableOpacity>
             </View>
+            </ScrollView>
             </ImageBackground>
             <View style={styles.footer}>
                 <TouchableOpacity>
@@ -190,9 +192,9 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     header: {
-        marginTop:-65,
         marginBottom: 30,
         backgroundColor: '#000',
+        justifyContent: 'space-around',
         alignItems: 'center',
         paddingHorizontal: 40,
         borderBottomStartRadius:22,
@@ -204,7 +206,7 @@ const styles = StyleSheet.create({
         color: 'white',
     },
     form: {
-        borderRadius:20,
+        borderRadius:15,
         padding: 10,
         backgroundColor: 'black',
         marginBottom: 10,
@@ -222,7 +224,7 @@ const styles = StyleSheet.create({
     imageButton: {
         backgroundColor: 'red',
         padding: 10,
-        borderRadius: 5,
+        borderRadius: 10,
         alignItems: 'center',
         marginBottom: 10,
     },
@@ -243,7 +245,7 @@ const styles = StyleSheet.create({
     button: {
         backgroundColor: 'red',
         padding: 10,
-        borderRadius: 5,
+        borderRadius: 10,
         alignItems: 'center',
     },
     buttonText: {

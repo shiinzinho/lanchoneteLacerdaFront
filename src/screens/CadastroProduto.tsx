@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Image, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Image, ImageBackground, ScrollView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { launchCamera, launchImageLibrary } from "react-native-image-picker";
 import axios from "axios";
 
@@ -72,27 +72,30 @@ const CadastroProduto: React.FC = () => {
             }
         });
     }
-
-
-
-    return (
-        <View style={styles.container}>
-            <StatusBar backgroundColor='red' barStyle='light-content' />
-            <View style={styles.header}>
-                <Text style={styles.headerText}>Top Food</Text>
-            </View>
+        return (
+            <View style={styles.container}>
+                 <ImageBackground source={require('../assets/images/menu.png')} style={styles.imageBackground}>
+                <StatusBar backgroundColor='#ec3424' barStyle='light-content' />
+                <View style={styles.header}>
+                    <Image source={require('../assets/images/lacerda.png')} style={styles.imageHeader}></Image>
+                </View>
+                <ScrollView>
             <View style={styles.form}>
                 <TextInput
                     style={styles.input}
                     placeholder="Nome do Produto"
                     value={nome}
                     onChangeText={setNome}
+                    placeholderTextColor={'red'}
+                    color = 'white'
                 />
                 <TextInput
                     style={styles.input}
                     placeholder="Preço"
                     value={preco}
                     onChangeText={setPreco}
+                    placeholderTextColor={'red'}
+                    color = 'white'
                 />
                 <TextInput
                     style={styles.input}
@@ -100,21 +103,56 @@ const CadastroProduto: React.FC = () => {
                     value={ingredientes}
                     onChangeText={setIngredientes}
                     multiline
+                    placeholderTextColor={'red'}
+                    color = 'white'
                 />
                 <View style={styles.alinhamentoImagemSelecionada}>
                     {imagem ? <Image source={{ uri: imagem }} style={styles.imagemSelecionada} /> : null}
                 </View>
                 <TouchableOpacity style={styles.imageButton} onPress={selecionarImagem}>
-                    <Text style={styles.imageButtonText}>Selecionar Imagem</Text>
+                    <Text style={styles.imageButtonText}>Selecionar imagem</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.imageButton} onPress={abrirCamera}>
-                    <Text style={styles.imageButtonText}>Tirar Foto</Text>
+                    <Text style={styles.imageButtonText}>Tirar imagem</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.button} onPress={cadastrarProduto}>
-                    <Text style={styles.buttonText}>Cadastrar Produto</Text>
+                    <Text style={styles.buttonText}>Cadastrar Cliente</Text>
+                </TouchableOpacity>
+            </View>
+            </ScrollView>
+            </ImageBackground>
+            <View style={styles.footer}>
+                <TouchableOpacity>
+                    <Image 
+                    source={require('../assets/images/home.png')}
+                    style={styles.footerIcon}
+                    />
+                </TouchableOpacity>
+
+                <TouchableOpacity>
+                    <Image 
+                    source={require('../assets/images/orders.png')}
+                    style={styles.footerIcon}
+                    />
+                </TouchableOpacity>
+
+                <TouchableOpacity>
+                    <Image 
+                    source={require('../assets/images/profile.png')}
+                    style={styles.footerIcon}
+                    />
+                </TouchableOpacity>
+                
+                <TouchableOpacity>
+                    <Image 
+                    source={require('../assets/images/menuIcon.png')}
+                    style={styles.footerIcon}
+                    />
                 </TouchableOpacity>
             </View>
         </View>
+        
+        
     );
 }
 const styles = StyleSheet.create({
@@ -122,9 +160,13 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     header: {
-        backgroundColor: 'red',
-        paddingVertical: 10,
+        marginBottom: 30,
+        backgroundColor: '#000',
+        justifyContent: 'space-around',
         alignItems: 'center',
+        paddingHorizontal: 40,
+        borderBottomStartRadius:22,
+        borderBottomEndRadius:22
     },
     headerText: {
         fontSize: 20,
@@ -132,22 +174,25 @@ const styles = StyleSheet.create({
         color: 'white',
     },
     form: {
+        borderRadius:15,
         padding: 10,
-        backgroundColor: '#f0f0f0',
+        backgroundColor: 'black',
         marginBottom: 10,
     },
     input: {
         height: 40,
-        borderColor: 'gray',
+        width: 350,
+        borderColor: 'white',
         borderWidth: 1,
         marginBottom: 10,
         paddingHorizontal: 10,
         borderRadius: 10,
+        color:'black',
     },
     imageButton: {
         backgroundColor: 'red',
         padding: 10,
-        borderRadius: 5,
+        borderRadius: 10,
         alignItems: 'center',
         marginBottom: 10,
     },
@@ -168,12 +213,34 @@ const styles = StyleSheet.create({
     button: {
         backgroundColor: 'red',
         padding: 10,
-        borderRadius: 5,
+        borderRadius: 10,
         alignItems: 'center',
     },
     buttonText: {
         color: 'white',
         fontWeight: 'bold',
+    },
+    imageBackground: {
+        flex: 1,
+        resizeMode: "cover",
+        justifyContent: "center",
+        alignItems: "center"
+      },
+      imageHeader: {
+        width: 320,
+        height: 150,
+      },
+      footer: {
+        borderTopWidth: 0.2,
+        backgroundColor: 'black',
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        paddingVertical: 10
+    },
+    footerIcon: {
+        width: 30,
+        height: 30
     },
 });
 
