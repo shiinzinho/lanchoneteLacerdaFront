@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { Image, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Image, ImageBackground, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { launchCamera, launchImageLibrary } from "react-native-image-picker";
 import axios from "axios";
 
 const CadastroCliente: React.FC = () => {
-    const [produtos, setProdutos] = useState<Cliente[]>([]);
+    const [clientes, setClientes] = useState<Cliente[]>([]);
     const [foto, setFoto] = useState<any>('');
     const [nome, setNome] = useState<string>('');
     const [endereco, setEndereco] = useState<string>('');
@@ -83,9 +83,10 @@ const CadastroCliente: React.FC = () => {
 
     return (
         <View style={styles.container}>
-            <StatusBar backgroundColor='red' barStyle='light-content' />
+             <ImageBackground source={require('../assets/images/menu.png')} style={styles.imageBackground}>
+            <StatusBar backgroundColor='#ec3424' barStyle='light-content' />
             <View style={styles.header}>
-                <Text style={styles.headerText}>Top Food</Text>
+                <Image source={require('../assets/images/lacerda.png')} style={styles.imageHeader}></Image>
             </View>
             <View style={styles.form}>
                 <TextInput
@@ -93,36 +94,48 @@ const CadastroCliente: React.FC = () => {
                     placeholder="Nome do Cliente"
                     value={nome}
                     onChangeText={setNome}
+                    placeholderTextColor={'red'}
+                    color = 'white'
                 />
                 <TextInput
                     style={styles.input}
                     placeholder="Endereço do Cliente"
                     value={endereco}
                     onChangeText={setEndereco}
+                    placeholderTextColor={'red'}
+                    color = 'white'
                 />
                 <TextInput
                     style={styles.input}
                     placeholder="Telefone do Cliente"
                     value={telefone}
                     onChangeText={setTelefone}
+                    placeholderTextColor={'red'}
+                    color = 'white'
                 />
                 <TextInput
                     style={styles.input}
                     placeholder="E-mail do Cliente"
                     value={email}
                     onChangeText={setEmail}
+                    placeholderTextColor={'red'}
+                    color = 'white'
                 />
                 <TextInput
                     style={styles.input}
                     placeholder="CPF do Cliente"
                     value={cpf}
                     onChangeText={setCpf}
+                    placeholderTextColor={'red'}
+                    color = 'white'
                 />
                 <TextInput
                     style={styles.input}
                     placeholder="Senha do Cliente"
                     value={password}
                     onChangeText={setPassword}
+                    placeholderTextColor={'red'}
+                    color = 'white'
                 />
                 <View style={styles.alinhamentofotoSelecionada}>
                     {foto ? <Image source={{ uri: foto }} style={styles.fotoSelecionada} /> : null}
@@ -134,10 +147,42 @@ const CadastroCliente: React.FC = () => {
                     <Text style={styles.imageButtonText}>Tirar Foto</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.button} onPress={cadastrarCliente}>
-                    <Text style={styles.buttonText}>Cadastrar Produto</Text>
+                    <Text style={styles.buttonText}>Cadastrar Cliente</Text>
+                </TouchableOpacity>
+            </View>
+            </ImageBackground>
+            <View style={styles.footer}>
+                <TouchableOpacity>
+                    <Image 
+                    source={require('../assets/images/home.png')}
+                    style={styles.footerIcon}
+                    />
+                </TouchableOpacity>
+
+                <TouchableOpacity>
+                    <Image 
+                    source={require('../assets/images/orders.png')}
+                    style={styles.footerIcon}
+                    />
+                </TouchableOpacity>
+
+                <TouchableOpacity>
+                    <Image 
+                    source={require('../assets/images/profile.png')}
+                    style={styles.footerIcon}
+                    />
+                </TouchableOpacity>
+                
+                <TouchableOpacity>
+                    <Image 
+                    source={require('../assets/images/menuIcon.png')}
+                    style={styles.footerIcon}
+                    />
                 </TouchableOpacity>
             </View>
         </View>
+        
+        
     );
 }
 const styles = StyleSheet.create({
@@ -145,9 +190,13 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     header: {
-        backgroundColor: 'red',
-        paddingVertical: 10,
+        marginTop:-65,
+        marginBottom: 30,
+        backgroundColor: '#000',
         alignItems: 'center',
+        paddingHorizontal: 40,
+        borderBottomStartRadius:22,
+        borderBottomEndRadius:22
     },
     headerText: {
         fontSize: 20,
@@ -155,17 +204,20 @@ const styles = StyleSheet.create({
         color: 'white',
     },
     form: {
+        borderRadius:20,
         padding: 10,
-        backgroundColor: '#f0f0f0',
+        backgroundColor: 'black',
         marginBottom: 10,
     },
     input: {
         height: 40,
-        borderColor: 'gray',
+        width: 350,
+        borderColor: 'white',
         borderWidth: 1,
         marginBottom: 10,
         paddingHorizontal: 10,
         borderRadius: 10,
+        color:'black',
     },
     imageButton: {
         backgroundColor: 'red',
@@ -197,6 +249,28 @@ const styles = StyleSheet.create({
     buttonText: {
         color: 'white',
         fontWeight: 'bold',
+    },
+    imageBackground: {
+        flex: 1,
+        resizeMode: "cover",
+        justifyContent: "center",
+        alignItems: "center"
+      },
+      imageHeader: {
+        width: 320,
+        height: 150,
+      },
+      footer: {
+        borderTopWidth: 0.2,
+        backgroundColor: 'black',
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        paddingVertical: 10
+    },
+    footerIcon: {
+        width: 30,
+        height: 30
     },
 });
 
