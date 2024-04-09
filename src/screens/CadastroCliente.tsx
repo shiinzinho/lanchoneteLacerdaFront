@@ -6,7 +6,7 @@ import axios from "axios";
 const CadastroCliente: React.FC = () => {
     const [produtos, setProdutos] = useState<Cliente[]>([]);
     const [foto, setFoto] = useState<any>('');
-    const [nome, setNome] = useState<any>('');
+    const [nome, setNome] = useState<string>('');
     const [endereco, setEndereco] = useState<string>('');
     const [telefone, setTelefone] = useState<string>('');
     const [email, setEmail] = useState<string>('');
