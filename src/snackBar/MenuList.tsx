@@ -17,7 +17,7 @@ interface Item {
     nome: string,
     preco: string,
     ingredients: string,
-    imagem: string
+    imagem: any,
 }
 
 const MenuList: React.FC = () => {
@@ -35,31 +35,26 @@ const MenuList: React.FC = () => {
                 imagem: item.imagem
             }));
 
-            console.log(produtosComId);
-
             setProdutos([...produtosComId]); // Criar um novo array ao atualizar o estado
         } catch (error) {
             console.error('Erro ao obter produtos:', error);
         }
     };
 
-    useEffect(() => {
-        fetchProdutos();
-    }, []);
-
     const renderItem = ({ item, index }: { item: Item, index: number }) => {
-        const imageSource = item.imagem ? { uri: item.imagem } : null;
-        console.log(imageSource);
-
         return (
             <View key={item.id} style={styles.item}>
                 <Text style={styles.itemText}>{item.nome}</Text>
                 <Text style={styles.itemText}>{item.preco}</Text>
                 <Text style={styles.itemText}>{item.ingredients}</Text>
-                {imageSource && <Image source={imageSource} style={styles.imageIcon} />}
+                {item.imagem && <Image source={{ uri: item.imagem }} style={styles.imageIcon} />}
             </View>
         );
     };
+
+    useEffect(() => {
+        fetchProdutos();
+    }, []);
 
     return (
         <View style={styles.container}>
@@ -89,7 +84,8 @@ const MenuList: React.FC = () => {
             </View>
         </View>
     );
-}
+};
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
