@@ -116,7 +116,7 @@ const CadastroProduto: React.FC = () => {
                     <Text style={styles.imageButtonText}>Tirar imagem</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.button} onPress={cadastrarProduto}>
-                    <Text style={styles.buttonText}>Cadastrar Cliente</Text>
+                    <Text style={styles.buttonText}>Cadastrar Produto</Text>
                 </TouchableOpacity>
             </View>
             </ScrollView>
