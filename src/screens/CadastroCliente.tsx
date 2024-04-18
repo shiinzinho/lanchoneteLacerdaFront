@@ -14,15 +14,6 @@ const CadastroCliente: React.FC = () => {
     const [password, setPassword] = useState<string>('');
     const [errors, setErrors] = useState<Record<string, string>>({});
 
-    const verificarExistenciaNoBackend = async (campo, valor) => {
-        try {
-          const response = await axios.get(`http://10.137.11.206:8000/api/clientes/verificar/${campo}/${valor}`);
-          return response.data.existe;
-        } catch (error) {
-          console.error('Erro ao verificar existência no backend:', error);
-          return false;
-        }
-      };
     const validarCampos = () => {
         const errors: Record<string, string> = {};
 
