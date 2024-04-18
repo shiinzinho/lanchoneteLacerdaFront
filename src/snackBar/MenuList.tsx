@@ -25,7 +25,7 @@ const MenuList: React.FC = () => {
 
     const fetchProdutos = async () => {
         try {
-            const response = await axios.get('http://10.137.11.208:8000/api/produtos');
+            const response = await axios.get('http://10.137.11.206:8000/api/produtos');
             const produtosArray = Array.isArray(response.data) ? response.data : [response.data];
             const produtosComId = produtosArray.map((item: any, index: number) => ({
                 id: index.toString(),

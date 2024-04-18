@@ -12,8 +12,61 @@ const CadastroCliente: React.FC = () => {
     const [email, setEmail] = useState<string>('');
     const [cpf, setCpf] = useState<string>('');
     const [password, setPassword] = useState<string>('');
+    const [errors, setErrors] = useState<Record<string, string>>({});
+
+    const verificarExistenciaNoBackend = async (campo, valor) => {
+        try {
+          const response = await axios.get(`http://10.137.11.206:8000/api/clientes/verificar/${campo}/${valor}`);
+          return response.data.existe;
+        } catch (error) {
+          console.error('Erro ao verificar existência no backend:', error);
+          return false;
+        }
+      };
+    const validarCampos = () => {
+        const errors: Record<string, string> = {};
+
+        if (!foto) {
+            errors.foto = "Foto é obrigatória";
+        }
+        if (!nome) {
+            errors.nome = "Nome é obrigatório";
+        } else {
+            if (nome.length < 10) {
+                errors.nome = "Nome deve ter no mínimo 10 caracteres";
+            } else if (nome.length > 200) {
+                errors.nome = "Nome deve ter no máximo 200 caracteres";
+            }
+        }
+        if (!endereco) {
+            errors.endereco = "Endereço é obrigatório";
+        } else { if (endereco.length < 10) {
+            errors.endereco = "Endereço deve ter no mínimo 10 caracteres";
+        } else if (endereco.length > 120) {
+            errors.endereco = "Endereço deve ter no máximo 120 caracteres";
+        }}
+        if (!telefone) {
+            errors.telefone = "Telefone é obrigatório";
+        } else if (!/^\d{10,14}$/.test(telefone)) {
+            errors.telefone = "Telefone deve conter apenas números e ter entre 10 e 14 caracteres";
+        }
+        if (!email) {
+            errors.email = "E-mail é obrigatório";
+        }
+        if (!cpf) {
+            errors.cpf = "CPF é obrigatório";
+        }
+        if (!password) {
+            errors.password = "Senha é obrigatória";
+        }
+        setErrors(errors);
+        return Object.keys(errors).length === 0;
+    }
 
     const cadastrarCliente = async () => {
+        if (!validarCampos()) {
+            return;
+        }
         try {
             const formData = new FormData();
             formData.append('foto', {
@@ -28,7 +81,7 @@ const CadastroCliente: React.FC = () => {
             formData.append('cpf', cpf);
             formData.append('password', password);
 
-            const response = await axios.post('http://10.137.11.208:8000/api/clientes', formData, {
+            const response = await axios.post('http://10.137.11.206:8000/api/clientes', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
@@ -54,7 +107,6 @@ const CadastroCliente: React.FC = () => {
                 let fotoUri = response.uri || response.assets?.[0]?.uri;
                 setFoto(fotoUri);
                 console.log(fotoUri);
-
             }
         });
     }
@@ -97,7 +149,7 @@ const CadastroCliente: React.FC = () => {
                     onChangeText={setNome}
                     placeholderTextColor={'red'}
                     color = 'white'
-                />
+                />{errors.nome && <Text style={styles.errorText}>{errors.nome}</Text>}
                 <TextInput
                     style={styles.input}
                     placeholder="Endereço do Cliente"
@@ -105,7 +157,7 @@ const CadastroCliente: React.FC = () => {
                     onChangeText={setEndereco}
                     placeholderTextColor={'red'}
                     color = 'white'
-                />
+                />{errors.endereco && <Text style={styles.errorText}>{errors.endereco}</Text>}
                 <TextInput
                     style={styles.input}
                     placeholder="Telefone do Cliente"
@@ -113,7 +165,7 @@ const CadastroCliente: React.FC = () => {
                     onChangeText={setTelefone}
                     placeholderTextColor={'red'}
                     color = 'white'
-                />
+                />{errors.telefone && <Text style={styles.errorText}>{errors.telefone}</Text>}
                 <TextInput
                     style={styles.input}
                     placeholder="E-mail do Cliente"
@@ -121,7 +173,7 @@ const CadastroCliente: React.FC = () => {
                     onChangeText={setEmail}
                     placeholderTextColor={'red'}
                     color = 'white'
-                />
+                />{errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
                 <TextInput
                     style={styles.input}
                     placeholder="CPF do Cliente"
@@ -129,7 +181,7 @@ const CadastroCliente: React.FC = () => {
                     onChangeText={setCpf}
                     placeholderTextColor={'red'}
                     color = 'white'
-                />
+                />{errors.cpf && <Text style={styles.errorText}>{errors.cpf}</Text>}
                 <TextInput
                     style={styles.input}
                     placeholder="Senha do Cliente"
@@ -137,10 +189,10 @@ const CadastroCliente: React.FC = () => {
                     onChangeText={setPassword}
                     placeholderTextColor={'red'}
                     color = 'white'
-                />
+                />{errors.password && <Text style={styles.errorText}>{errors.password}</Text>}
                 <View style={styles.alinhamentofotoSelecionada}>
                     {foto ? <Image source={{ uri: foto }} style={styles.fotoSelecionada} /> : null}
-                </View>
+                </View>{errors.foto && <Text style={styles.errorText}>{errors.foto}</Text>}
                 <TouchableOpacity style={styles.imageButton} onPress={selecionarFoto}>
                     <Text style={styles.imageButtonText}>Selecionar foto</Text>
                 </TouchableOpacity>
@@ -199,6 +251,10 @@ const styles = StyleSheet.create({
         paddingHorizontal: 40,
         borderBottomStartRadius:22,
         borderBottomEndRadius:22
+    },
+    errorText: {
+        color: 'yellow',
+        marginBottom: 5,
     },
     headerText: {
         fontSize: 20,

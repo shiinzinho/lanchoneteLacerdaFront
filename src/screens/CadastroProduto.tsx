@@ -9,27 +9,68 @@ const CadastroProduto: React.FC = () => {
     const [preco, setPreco] = useState<string>('');
     const [ingredientes, setIngredientes] = useState<string>('');
     const [imagem, setImagem] = useState<any>('');
+    const [errors, setErrors] = useState<Record<string, string>>({});
+
+    const validarCampos = () => {
+        const errors: Record<string, string> = {};
+    
+        if (!nome) {
+            errors.nome = "Nome é obrigatório";
+        } else {
+            if (nome.length < 10) {
+                errors.nome = "Nome deve ter no mínimo 10 caracteres";
+            } else if (nome.length > 200) {
+                errors.nome = "Nome deve ter no máximo 200 caracteres";
+            }
+        }
+    
+        if (!preco) {
+            errors.preco = "Preço é obrigatório";
+        } else if (!/^(\d{1,10}(\.\d{1,2}))$/.test(preco)) {
+            errors.preco = "Preço deve ser um número decimal com no máximo 10 caracteres e no máximo duas casas decimais";
+        }
+    
+        if (!ingredientes) {
+            errors.ingredientes = "Ingredientes é obrigatório";
+        } else {
+            if (ingredientes.length < 10) {
+                errors.ingredientes = "Ingredientes deve ter no mínimo 10 caracteres";
+            } else if (ingredientes.length > 500) {
+                errors.ingredientes = "Ingredientes deve ter no máximo 500 caracteres";
+            }
+        }
+    
+        if (!imagem) {
+            errors.imagem = "Imagem é obrigatória";
+        }
+    
+        setErrors(errors);
+        return Object.keys(errors).length === 0;
+    }
 
     const cadastrarProduto = async () => {
+        if (!validarCampos()) {
+            return;
+        }
         try {
-        const formData = new FormData();
-        formData.append('nome', nome);
-        formData.append('preco', preco);
-        formData.append('ingredientes', ingredientes);
-        formData.append('imagem', {
-            uri: imagem,
-            type: 'imagem/jpeg',
-            name: new Date() + '.jpg'
-        });
+            const formData = new FormData();
+            formData.append('nome', nome);
+            formData.append('preco', preco);
+            formData.append('ingredientes', ingredientes);
+            formData.append('imagem', {
+                uri: imagem,
+                type: 'imagem/jpeg',
+                name: new Date() + '.jpg'
+            });
 
-        const response = await axios.post ('http://10.137.11.208:8000/api/produtos', formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
-        });
-    } catch(error){
-        console.log(error);
-    }
+            const response = await axios.post('http://10.137.11.206:8000/api/produtos', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     const abrirCamera = () => {
@@ -72,87 +113,87 @@ const CadastroProduto: React.FC = () => {
             }
         });
     }
-        return (
-            <View style={styles.container}>
-                 <ImageBackground source={require('../assets/images/menu.png')} style={styles.imageBackground}>
+    return (
+        <View style={styles.container}>
+            <ImageBackground source={require('../assets/images/menu.png')} style={styles.imageBackground}>
                 <StatusBar backgroundColor='#ec3424' barStyle='light-content' />
                 <View style={styles.header}>
                     <Image source={require('../assets/images/lacerda.png')} style={styles.imageHeader}></Image>
                 </View>
                 <ScrollView>
-            <View style={styles.form}>
-                <TextInput
-                    style={styles.input}
-                    placeholder="Nome do Produto"
-                    value={nome}
-                    onChangeText={setNome}
-                    placeholderTextColor={'red'}
-                    color = 'white'
-                />
-                <TextInput
-                    style={styles.input}
-                    placeholder="Preço"
-                    value={preco}
-                    onChangeText={setPreco}
-                    placeholderTextColor={'red'}
-                    color = 'white'
-                />
-                <TextInput
-                    style={styles.input}
-                    placeholder="Ingredientes"
-                    value={ingredientes}
-                    onChangeText={setIngredientes}
-                    multiline
-                    placeholderTextColor={'red'}
-                    color = 'white'
-                />
-                <View style={styles.alinhamentoImagemSelecionada}>
-                    {imagem ? <Image source={{ uri: imagem }} style={styles.imagemSelecionada} /> : null}
-                </View>
-                <TouchableOpacity style={styles.imageButton} onPress={selecionarImagem}>
-                    <Text style={styles.imageButtonText}>Selecionar imagem</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.imageButton} onPress={abrirCamera}>
-                    <Text style={styles.imageButtonText}>Tirar imagem</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.button} onPress={cadastrarProduto}>
-                    <Text style={styles.buttonText}>Cadastrar Produto</Text>
-                </TouchableOpacity>
-            </View>
-            </ScrollView>
+                    <View style={styles.form}>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Nome do Produto"
+                            value={nome}
+                            onChangeText={setNome}
+                            placeholderTextColor={'red'}
+                            color='white'
+                        />{errors.nome && <Text style={styles.errorText}>{errors.nome}</Text>}
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Preço"
+                            value={preco}
+                            onChangeText={setPreco}
+                            placeholderTextColor={'red'}
+                            color='white'
+                        />{errors.preco && <Text style={styles.errorText}>{errors.preco}</Text>}
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Ingredientes"
+                            value={ingredientes}
+                            onChangeText={setIngredientes}
+                            multiline
+                            placeholderTextColor={'red'}
+                            color='white'
+                        />{errors.ingredientes && <Text style={styles.errorText}>{errors.ingredientes}</Text>}
+                        <View style={styles.alinhamentoImagemSelecionada}>
+                            {imagem ? <Image source={{ uri: imagem }} style={styles.imagemSelecionada} /> : null}
+                        </View>{errors.imagem && <Text style={styles.errorText}>{errors.imagem}</Text>}
+                        <TouchableOpacity style={styles.imageButton} onPress={selecionarImagem}>
+                            <Text style={styles.imageButtonText}>Selecionar imagem</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.imageButton} onPress={abrirCamera}>
+                            <Text style={styles.imageButtonText}>Tirar imagem</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.button} onPress={cadastrarProduto}>
+                            <Text style={styles.buttonText}>Cadastrar Produto</Text>
+                        </TouchableOpacity>
+                    </View>
+                </ScrollView>
             </ImageBackground>
             <View style={styles.footer}>
                 <TouchableOpacity>
-                    <Image 
-                    source={require('../assets/images/home.png')}
-                    style={styles.footerIcon}
+                    <Image
+                        source={require('../assets/images/home.png')}
+                        style={styles.footerIcon}
                     />
                 </TouchableOpacity>
 
                 <TouchableOpacity>
-                    <Image 
-                    source={require('../assets/images/orders.png')}
-                    style={styles.footerIcon}
+                    <Image
+                        source={require('../assets/images/orders.png')}
+                        style={styles.footerIcon}
                     />
                 </TouchableOpacity>
 
                 <TouchableOpacity>
-                    <Image 
-                    source={require('../assets/images/profile.png')}
-                    style={styles.footerIcon}
+                    <Image
+                        source={require('../assets/images/profile.png')}
+                        style={styles.footerIcon}
                     />
                 </TouchableOpacity>
-                
+
                 <TouchableOpacity>
-                    <Image 
-                    source={require('../assets/images/menuIcon.png')}
-                    style={styles.footerIcon}
+                    <Image
+                        source={require('../assets/images/menuIcon.png')}
+                        style={styles.footerIcon}
                     />
                 </TouchableOpacity>
             </View>
         </View>
-        
-        
+
+
     );
 }
 const styles = StyleSheet.create({
@@ -165,8 +206,12 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around',
         alignItems: 'center',
         paddingHorizontal: 40,
-        borderBottomStartRadius:22,
-        borderBottomEndRadius:22
+        borderBottomStartRadius: 22,
+        borderBottomEndRadius: 22
+    },
+    errorText: {
+        color: 'yellow',
+        marginBottom: 5,
     },
     headerText: {
         fontSize: 20,
@@ -174,7 +219,7 @@ const styles = StyleSheet.create({
         color: 'white',
     },
     form: {
-        borderRadius:15,
+        borderRadius: 15,
         padding: 10,
         backgroundColor: 'black',
         marginBottom: 10,
@@ -187,7 +232,7 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         paddingHorizontal: 10,
         borderRadius: 10,
-        color:'black',
+        color: 'black',
     },
     imageButton: {
         backgroundColor: 'red',
@@ -225,12 +270,12 @@ const styles = StyleSheet.create({
         resizeMode: "cover",
         justifyContent: "center",
         alignItems: "center"
-      },
-      imageHeader: {
+    },
+    imageHeader: {
         width: 320,
         height: 150,
-      },
-      footer: {
+    },
+    footer: {
         borderTopWidth: 0.2,
         backgroundColor: 'black',
         flexDirection: 'row',
