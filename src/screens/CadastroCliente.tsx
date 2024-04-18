@@ -13,7 +13,7 @@ const CadastroCliente: React.FC = () => {
     const [cpf, setCpf] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [errors, setErrors] = useState<Record<string, string>>({});
-
+    
     const validarCampos = () => {
         const errors: Record<string, string> = {};
 
@@ -31,11 +31,11 @@ const CadastroCliente: React.FC = () => {
         }
         if (!endereco) {
             errors.endereco = "Endereço é obrigatório";
-        } else { if (endereco.length < 10) {
-            errors.endereco = "Endereço deve ter no mínimo 10 caracteres";
-        } else if (endereco.length > 120) {
-            errors.endereco = "Endereço deve ter no máximo 120 caracteres";
-        }}
+        } else {            if (nome.length < 10) {
+                errors.endereco = "Endereço deve ter no mínimo 10 caracteres";
+            } else if (endereco.length > 120) {
+                errors.endereco = "Endereço deve ter no máximo 120 caracteres";
+            }}
         if (!telefone) {
             errors.telefone = "Telefone é obrigatório";
         } else if (!/^\d{10,14}$/.test(telefone)) {

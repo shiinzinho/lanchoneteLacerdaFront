@@ -35,7 +35,7 @@ const MenuList: React.FC = () => {
                 imagem: item.imagem
             }));
 
-            setProdutos([...produtosComId]); // Criar um novo array ao atualizar o estado
+            setProdutos([...produtosComId]);
         } catch (error) {
             console.error('Erro ao obter produtos:', error);
         }
@@ -44,9 +44,9 @@ const MenuList: React.FC = () => {
     const renderItem = ({ item, index }: { item: Item, index: number }) => {
         return (
             <View key={item.id} style={styles.item}>
-                <Text style={styles.itemText}>{item.nome}</Text>
-                <Text style={styles.itemText}>{item.preco}</Text>
-                <Text style={styles.itemText}>{item.ingredients}</Text>
+                <Text style={styles.itemText1}>{item.nome}</Text>
+                <Text style={styles.itemText2}>{item.preco}</Text>
+                <Text style={styles.itemText3}>{item.ingredients}</Text>
                 {item.imagem && <Image source={{ uri: item.imagem }} style={styles.imageIcon} />}
             </View>
         );
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
     },
     item: {
-        backgroundColor: 'white',
+        backgroundColor: 'black',
         padding: 20,
         marginVertical: 8,
         marginHorizontal: 16,
@@ -100,9 +100,25 @@ const styles = StyleSheet.create({
         borderColor: 'red',
         borderWidth: 3,
     },
-    itemText: {
-        fontSize: 16,
-        marginBottom: 8,
+    itemText1: {
+        fontSize: 25,
+        fontWeight: '700',
+        color: 'red',
+        borderBottomWidth: 2,
+        borderBottomColor: 'red',
+    },
+    itemText2: {
+        marginTop: 10,
+        fontSize: 20,
+        fontWeight: '500',
+        color: 'yellow',
+    },
+    itemText3: {
+        marginTop:10,
+        marginBottom:10,
+        fontSize: 20,
+        fontWeight: '500',
+        color: 'white',
     },
     header: {
         backgroundColor: '#000',
@@ -113,12 +129,13 @@ const styles = StyleSheet.create({
         borderBottomEndRadius: 22,
     },
     imageIcon: {
-        width: 320,
-        height: 150,
+        width: 296,
+        height: 400,
         borderRadius: 20,
         borderColor: 'red',
         borderWidth: 2,
         marginBottom: 20,
+        resizeMode: 'cover',
     },
     imageBackground: {
         flex: 1,
