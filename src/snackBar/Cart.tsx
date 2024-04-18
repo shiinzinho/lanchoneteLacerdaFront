@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, View, Text, TouchableOpacity, Image, ImageBackground } from "react-native";
+import { StyleSheet, View, Text, TouchableOpacity, Image, ImageBackground, StatusBar, ScrollView } from "react-native";
 
 interface Item {
     id: string;
@@ -13,6 +13,9 @@ interface Item {
 const Cart: React.FC = () => {
     const [dados, setDados] = useState<Item[]>([
         { id: '1', nome: '𝙲𝚕𝚞𝚋 𝚜𝚊𝚗𝚍𝚠𝚒𝚌𝚑', qtd: '1', price: '$12', image: require('../assets/images/ClubSandwich.jpg'), quantity: 0 },
+        { id: '2', nome: '𝙲𝚕𝚞𝚋 𝚜𝚊𝚗𝚍𝚠𝚒𝚌𝚑', qtd: '1', price: '$12', image: require('../assets/images/ClubSandwich.jpg'), quantity: 0 },
+        { id: '3', nome: '𝙲𝚕𝚞𝚋 𝚜𝚊𝚗𝚍𝚠𝚒𝚌𝚑', qtd: '1', price: '$12', image: require('../assets/images/ClubSandwich.jpg'), quantity: 0 },
+        { id: '4', nome: '𝙲𝚕𝚞𝚋 𝚜𝚊𝚗𝚍𝚠𝚒𝚌𝚑', qtd: '1', price: '$12', image: require('../assets/images/ClubSandwich.jpg'), quantity: 0 },
     ]);
 
     const decreaseQuantity = (itemId: string) => {
@@ -48,24 +51,30 @@ const Cart: React.FC = () => {
     }, 0);
 
     return (
-
         <View style={styles.container}>
+            <StatusBar backgroundColor='#ec3424' barStyle='light-content' />
             <ImageBackground source={require('../assets/images/menu.png')} style={styles.imageBackground}>
-                {dados.map(item => (
-                    <View style={styles.item} key={item.id}>
-                        <Text style={styles.text1}>{item.nome}</Text>
-                        <Text style={styles.text3}>{item.price}</Text>
-                        <Image source={item.image} style={styles.imageIcon}></Image>
-                        <TouchableOpacity onPress={() => decreaseQuantity(item.id)}>
-                            <Image source={require('../assets/images/subtract.png')} style={styles.subtractIcon}></Image>
-                        </TouchableOpacity>
-                        <Text style={styles.text2}>{item.quantity}</Text>
-                        <TouchableOpacity onPress={() => increaseQuantity(item.id)}>
-                            <Image source={require('../assets/images/addItem.png')} style={styles.addIcon}></Image>
-                        </TouchableOpacity>
-                    </View>
-
-                ))}
+                <View style={styles.header}>
+                    <Image source={require('../assets/images/lacerda.png')} style={styles.imageHeader} />
+                </View>
+                <ScrollView contentContainerStyle={styles.scrollViewContent}>
+                    {dados.map(item => (
+                        <View style={styles.item} key={item.id}>
+                            <Text style={styles.text1}>{item.nome}</Text>
+                            <Image source={item.image} style={styles.imageIcon} />
+                            <View style={styles.quantityContainer}>
+                                <TouchableOpacity onPress={() => decreaseQuantity(item.id)}>
+                                    <Image source={require('../assets/images/subtract.png')} style={styles.subtractIcon} />
+                                </TouchableOpacity>
+                                <Text style={styles.quantity}>{item.quantity}</Text>
+                                <TouchableOpacity onPress={() => increaseQuantity(item.id)}>
+                                    <Image source={require('../assets/images/addItem.png')} style={styles.addIcon} />
+                                </TouchableOpacity>
+                            </View>
+                            <Text style={styles.text3}>{item.price}</Text>
+                        </View>
+                    ))}
+                </ScrollView>
                 <View style={styles.totalContainer}>
                     <Text style={styles.totalText}>Preço total: {totalPrice.toFixed(2)}$</Text>
                 </View>
@@ -84,26 +93,35 @@ const Cart: React.FC = () => {
         </View>
     );
 }
+
 const styles = StyleSheet.create({
     container: {
         flex: 1
     },
-    totalContainer: {
-        position: 'absolute',
-        bottom: 60,
-        left: 0,
-        right: 0,
-        backgroundColor: 'black',
-        padding: 10,
-        borderRadius: 15,
-        borderColor: 'red',
-        borderWidth: 3,
+    header: {
+        backgroundColor: '#000',
+        alignItems: 'center',
+        paddingVertical: 1,
+        paddingHorizontal: 40,
+        borderBottomStartRadius: 22,
+        borderBottomEndRadius: 22,
     },
-    itemsContainer: {
+    scrollViewContent: {
+        flexGrow: 1,
+        alignItems: 'center',
+        paddingTop: 20,
+    },
+    totalText: {
+        fontSize: 20,
+        color: 'yellow',
+    },
+    imageBackground: {
         flex: 1,
-        justifyContent: 'flex-end'
+        resizeMode: "cover",
+        justifyContent: "center",
+        alignItems: "center"
     },
-    total: {
+    totalContainer: {
         backgroundColor: 'black',
         padding: 10,
         marginBottom: 5,
@@ -111,10 +129,6 @@ const styles = StyleSheet.create({
         borderColor: 'red',
         borderWidth: 3,
         alignItems: 'center'
-    },
-    totalText: {
-        fontSize: 20,
-        color: 'yellow',
     },
     footer: {
         position: 'absolute',
@@ -138,14 +152,6 @@ const styles = StyleSheet.create({
         borderColor: 'red',
         borderWidth: 3,
     },
-    header: {
-        backgroundColor: '#000',
-        alignItems: 'center',
-        paddingVertical: 1,
-        paddingHorizontal: 40,
-        borderBottomStartRadius: 22,
-        borderBottomEndRadius: 22
-    },
     text1: {
         fontSize: 25,
         fontWeight: '700',
@@ -153,43 +159,39 @@ const styles = StyleSheet.create({
         borderBottomWidth: 2,
         borderBottomColor: 'red',
     },
+    quantityContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: 10,
+    },
+    quantity: {
+        fontSize: 20,
+        fontWeight: '500',
+        color: 'white',
+        marginHorizontal: 10,
+    },
+    text3: {
+        fontSize: 20,
+        fontWeight: '500',
+        color: 'yellow',
+        marginTop: 10,
+    },
+    subtractIcon: {
+        width: 31,
+        height: 31,
+    },
+    addIcon: {
+        width: 30,
+        height: 30,
+    },
+
     text2: {
         marginLeft: 150,
         marginTop: -28,
         fontSize: 20,
         fontWeight: '500',
         color: 'white',
-    },
-    text3: {
-        marginTop: 10,
-        fontSize: 20,
-        fontWeight: '500',
-        color: 'yellow',
-    },
-    carrinho: {
-        backgroundColor: 'black',
-        padding: 10,
-        marginBottom: 5,
-        borderRadius: 15,
-        borderColor: 'red',
-        borderWidth: 3,
-        marginRight: 185,
-    },
-    carrinhoText: {
-        fontSize: 20,
-        color: '#fff',
-    },
-    subtractIcon: {
-        width: 31,
-        height: 31,
-        marginLeft: 110,
-
-    },
-    addIcon: {
-        width: 30,
-        height: 30,
-        marginLeft: 170,
-        marginTop: -29.5
     },
     imageIcon: {
         marginTop: 15,
@@ -200,13 +202,6 @@ const styles = StyleSheet.create({
         borderColor: 'red',
         borderWidth: 2,
         marginBottom: 20
-
-    },
-    imageBackground: {
-        flex: 1,
-        resizeMode: "cover",
-        justifyContent: "center",
-        alignItems: "center"
     },
     imageHeader: {
         width: 320,
@@ -216,7 +211,7 @@ const styles = StyleSheet.create({
         width: 30,
         height: 30
     },
-}
-);
+});
+
 
 export default Cart;

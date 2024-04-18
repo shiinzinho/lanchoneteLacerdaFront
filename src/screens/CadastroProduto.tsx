@@ -276,12 +276,17 @@ const styles = StyleSheet.create({
         height: 150,
     },
     footer: {
-        borderTopWidth: 0.2,
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
         backgroundColor: 'black',
         flexDirection: 'row',
         justifyContent: 'space-around',
         alignItems: 'center',
-        paddingVertical: 10
+        paddingVertical: 10,
+        borderTopWidth: 3,
+        borderColor: 'red',
     },
     footerIcon: {
         width: 30,
