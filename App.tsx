@@ -7,7 +7,7 @@ import CadastroCliente from "./src/screens/CadastroCliente";
 
 function App(): React.JSX.Element {
   return(
-    <Cart />
+    <MenuList />
   );
 }
 export default App;

@@ -1,23 +1,43 @@
-import React, { useState } from "react";
-import { StyleSheet, View, Text, TouchableOpacity, Image, ImageBackground, StatusBar, ScrollView } from "react-native";
+import axios from "axios";
+import React, { useState, useEffect } from "react";
+import {
+    StyleSheet,
+    View,
+    ScrollView,
+    Text,
+    FlatList,
+    TouchableOpacity,
+    StatusBar,
+    Image,
+    ImageBackground
+} from "react-native";
 
 interface Item {
     id: string;
     nome: string;
-    price: string;
-    qtd: string;
-    image: any;
+    preco: string;
+    ingredients: string;
+    imagem: any;
     quantity: number;
 }
 
 const Cart: React.FC = () => {
-    const [dados, setDados] = useState<Item[]>([
-        { id: '1', nome: '𝙲𝚕𝚞𝚋 𝚜𝚊𝚗𝚍𝚠𝚒𝚌𝚑', qtd: '1', price: '$12', image: require('../assets/images/ClubSandwich.jpg'), quantity: 0 },
-        { id: '2', nome: '𝙲𝚕𝚞𝚋 𝚜𝚊𝚗𝚍𝚠𝚒𝚌𝚑', qtd: '1', price: '$12', image: require('../assets/images/ClubSandwich.jpg'), quantity: 0 },
-        { id: '3', nome: '𝙲𝚕𝚞𝚋 𝚜𝚊𝚗𝚍𝚠𝚒𝚌𝚑', qtd: '1', price: '$12', image: require('../assets/images/ClubSandwich.jpg'), quantity: 0 },
-        { id: '4', nome: '𝙲𝚕𝚞𝚋 𝚜𝚊𝚗𝚍𝚠𝚒𝚌𝚑', qtd: '1', price: '$12', image: require('../assets/images/ClubSandwich.jpg'), quantity: 0 },
-    ]);
+    const [dados, setDados] = useState<Item[]>([]);
 
+    const fetchData = async () => {
+        try {
+            const response = await axios.get('http://10.137.11.208:8000/api/cart');
+            const dataArray = Array.isArray(response.data) ? response.data : [response.data];
+            const dataWithQuantity = dataArray.map((item: any) => ({
+                ...item,
+                quantity: 0
+            }));
+
+            setDados(dataWithQuantity);
+        } catch (error) {
+            console.error('Erro ao obter dados:', error);
+        }
+    };
     const decreaseQuantity = (itemId: string) => {
         setDados(prevData => {
             return prevData.map(item => {
@@ -31,7 +51,6 @@ const Cart: React.FC = () => {
             });
         });
     };
-
     const increaseQuantity = (itemId: string) => {
         setDados(prevData => {
             return prevData.map(item => {
@@ -47,21 +66,28 @@ const Cart: React.FC = () => {
     };
 
     const totalPrice = dados.reduce((total, item) => {
-        return total + (parseFloat(item.price.replace('$', '')) * item.quantity);
+        return total + (parseFloat(item.preco.replace('$', '')) * item.quantity);
     }, 0);
+
+    useEffect(() => {
+        fetchData();
+    }, []);
 
     return (
         <View style={styles.container}>
-            <StatusBar backgroundColor='#ec3424' barStyle='light-content' />
             <ImageBackground source={require('../assets/images/menu.png')} style={styles.imageBackground}>
+                <StatusBar backgroundColor='#ec3424' barStyle='light-content' />
                 <View style={styles.header}>
                     <Image source={require('../assets/images/lacerda.png')} style={styles.imageHeader} />
                 </View>
-                <ScrollView contentContainerStyle={styles.scrollViewContent}>
-                    {dados.map(item => (
+                <FlatList
+                    data={dados}
+                    renderItem={({ item, index }) => (
                         <View style={styles.item} key={item.id}>
-                            <Text style={styles.text1}>{item.nome}</Text>
-                            <Image source={item.image} style={styles.imageIcon} />
+                            <Text style={styles.itemText1}>{item.nome}</Text>
+                            <Text style={styles.itemText2}>{item.preco}</Text>
+                            <Text style={styles.itemText3}>{item.ingredients}</Text>
+                            {item.imagem && <Image source={{ uri: item.imagem }} style={styles.imageIcon} />}
                             <View style={styles.quantityContainer}>
                                 <TouchableOpacity onPress={() => decreaseQuantity(item.id)}>
                                     <Image source={require('../assets/images/subtract.png')} style={styles.subtractIcon} />
@@ -71,32 +97,82 @@ const Cart: React.FC = () => {
                                     <Image source={require('../assets/images/addItem.png')} style={styles.addIcon} />
                                 </TouchableOpacity>
                             </View>
-                            <Text style={styles.text3}>{item.price}</Text>
                         </View>
-                    ))}
-                </ScrollView>
+                    )}
+                    keyExtractor={(item) => item.id}
+                    ListEmptyComponent={() => <Text>Nenhum item encontrado</Text>}
+                    contentContainerStyle={styles.flatListContainer}
+                />
                 <View style={styles.totalContainer}>
                     <Text style={styles.totalText}>Preço total: {totalPrice.toFixed(2)}$</Text>
                 </View>
                 <View style={styles.footer}>
                     <TouchableOpacity>
-                        <Image source={require('../assets/images/home.png')} style={styles.footerIcon} />
+                        <Image
+                            source={require('../assets/images/home.png')}
+                            style={styles.footerIcon}
+                        />
                     </TouchableOpacity>
+
                     <TouchableOpacity>
-                        <Image source={require('../assets/images/orders.png')} style={styles.footerIcon} />
+                        <Image
+                            source={require('../assets/images/orders.png')}
+                            style={styles.footerIcon}
+                        />
                     </TouchableOpacity>
+
                     <TouchableOpacity>
-                        <Image source={require('../assets/images/profile.png')} style={styles.footerIcon} />
+                        <Image
+                            source={require('../assets/images/profile.png')}
+                            style={styles.footerIcon}
+                        />
+                    </TouchableOpacity>
+
+                    <TouchableOpacity>
+                        <Image
+                            source={require('../assets/images/menuIcon.png')}
+                            style={styles.footerIcon}
+                        />
                     </TouchableOpacity>
                 </View>
             </ImageBackground>
         </View>
     );
-}
+};
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1
+        flex: 1,
+        backgroundColor: 'white',
+    },
+    item: {
+        backgroundColor: 'black',
+        padding: 20,
+        marginVertical: 8,
+        marginHorizontal: 16,
+        borderRadius: 25,
+        borderColor: 'red',
+        borderWidth: 3,
+    },
+    itemText1: {
+        fontSize: 25,
+        fontWeight: '700',
+        color: 'red',
+        borderBottomWidth: 2,
+        borderBottomColor: 'red',
+    },
+    itemText2: {
+        marginTop: 10,
+        fontSize: 20,
+        fontWeight: '500',
+        color: 'yellow',
+    },
+    itemText3: {
+        marginTop: 10,
+        marginBottom: 10,
+        fontSize: 20,
+        fontWeight: '500',
+        color: 'white',
     },
     header: {
         backgroundColor: '#000',
@@ -106,29 +182,24 @@ const styles = StyleSheet.create({
         borderBottomStartRadius: 22,
         borderBottomEndRadius: 22,
     },
-    scrollViewContent: {
-        flexGrow: 1,
-        alignItems: 'center',
-        paddingTop: 20,
-    },
-    totalText: {
-        fontSize: 20,
-        color: 'yellow',
+    imageIcon: {
+        width: 296,
+        height: 400,
+        borderRadius: 20,
+        borderColor: 'red',
+        borderWidth: 2,
+        marginBottom: 20,
+        resizeMode: 'cover',
     },
     imageBackground: {
         flex: 1,
         resizeMode: "cover",
         justifyContent: "center",
-        alignItems: "center"
+        alignItems: "center",
     },
-    totalContainer: {
-        backgroundColor: 'black',
-        padding: 10,
-        marginBottom: 5,
-        borderRadius: 15,
-        borderColor: 'red',
-        borderWidth: 3,
-        alignItems: 'center'
+    imageHeader: {
+        width: 320,
+        height: 150,
     },
     footer: {
         position: 'absolute',
@@ -143,21 +214,12 @@ const styles = StyleSheet.create({
         borderTopWidth: 3,
         borderColor: 'red',
     },
-    item: {
-        backgroundColor: 'black',
-        padding: 20,
-        marginVertical: 8,
-        marginHorizontal: 16,
-        borderRadius: 25,
-        borderColor: 'red',
-        borderWidth: 3,
+    footerIcon: {
+        width: 30,
+        height: 30,
     },
-    text1: {
-        fontSize: 25,
-        fontWeight: '700',
-        color: 'red',
-        borderBottomWidth: 2,
-        borderBottomColor: 'red',
+    flatListContainer: {
+        flexGrow: 1,
     },
     quantityContainer: {
         flexDirection: 'row',
@@ -171,12 +233,6 @@ const styles = StyleSheet.create({
         color: 'white',
         marginHorizontal: 10,
     },
-    text3: {
-        fontSize: 20,
-        fontWeight: '500',
-        color: 'yellow',
-        marginTop: 10,
-    },
     subtractIcon: {
         width: 31,
         height: 31,
@@ -185,33 +241,20 @@ const styles = StyleSheet.create({
         width: 30,
         height: 30,
     },
-
-    text2: {
-        marginLeft: 150,
-        marginTop: -28,
-        fontSize: 20,
-        fontWeight: '500',
-        color: 'white',
-    },
-    imageIcon: {
-        marginTop: 15,
-        width: 300,
-        height: 160,
-        marginHorizontal: 10,
-        borderRadius: 20,
+    totalContainer: {
+        backgroundColor: 'black',
+        padding: 10,
+        width: 500,
+        marginBottom: 50,
+        borderRadius: 15,
         borderColor: 'red',
-        borderWidth: 2,
-        marginBottom: 20
+        borderWidth: 3,
+        alignItems: 'center',
     },
-    imageHeader: {
-        width: 320,
-        height: 150,
-    },
-    footerIcon: {
-        width: 30,
-        height: 30
+    totalText: {
+        fontSize: 20,
+        color: 'yellow',
     },
 });
-
 
 export default Cart;

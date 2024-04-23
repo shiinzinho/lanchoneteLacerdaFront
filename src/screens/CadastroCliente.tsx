@@ -72,7 +72,7 @@ const CadastroCliente: React.FC = () => {
             formData.append('cpf', cpf);
             formData.append('password', password);
 
-            const response = await axios.post('http://10.137.11.206:8000/api/clientes', formData, {
+            const response = await axios.post('http://10.137.11.208:8000/api/clientes', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
