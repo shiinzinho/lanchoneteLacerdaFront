@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Image, ImageBackground, ScrollView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { launchCamera, launchImageLibrary } from "react-native-image-picker";
 import axios from "axios";
+import { useNavigation } from "@react-navigation/native";
 
 const CadastroProduto: React.FC = () => {
     const [produtos, setProdutos] = useState<Produto[]>([]);
@@ -113,6 +114,7 @@ const CadastroProduto: React.FC = () => {
             }
         });
     }
+    const navigation = useNavigation();
     return (
         <View style={styles.container}>
             <ImageBackground source={require('../assets/images/menu.png')} style={styles.imageBackground}>
@@ -163,31 +165,31 @@ const CadastroProduto: React.FC = () => {
                 </ScrollView>
             </ImageBackground>
             <View style={styles.footer}>
-                <TouchableOpacity>
-                    <Image
-                        source={require('../assets/images/home.png')}
-                        style={styles.footerIcon}
+                <TouchableOpacity onPress={() => navigation.navigate('Cardapio')}>
+                    <Image 
+                    source={require('../assets/images/home.png')}
+                    style={styles.footerIcon} //cardapio
                     />
                 </TouchableOpacity>
 
-                <TouchableOpacity>
-                    <Image
-                        source={require('../assets/images/orders.png')}
-                        style={styles.footerIcon}
+                <TouchableOpacity onPress={() => navigation.navigate('CadastroProduto')}>
+                    <Image 
+                    source={require('../assets/images/orders.png')}
+                    style={styles.footerIcon} //cadastro produto
                     />
                 </TouchableOpacity>
 
-                <TouchableOpacity>
-                    <Image
-                        source={require('../assets/images/profile.png')}
-                        style={styles.footerIcon}
+                <TouchableOpacity onPress={() => navigation.navigate('CadastroCliente')}>
+                    <Image 
+                    source={require('../assets/images/profile.png')}
+                    style={styles.footerIcon} // cadastro cliente
                     />
                 </TouchableOpacity>
-
-                <TouchableOpacity>
-                    <Image
-                        source={require('../assets/images/menuIcon.png')}
-                        style={styles.footerIcon}
+                
+                <TouchableOpacity onPress={() => navigation.navigate('Carrinho')}>
+                    <Image 
+                    source={require('../assets/images/menuIcon.png')}
+                    style={styles.footerIcon} // carrinho
                     />
                 </TouchableOpacity>
             </View>
